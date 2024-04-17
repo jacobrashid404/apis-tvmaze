@@ -48,4 +48,4 @@ async function getShowsByTerm(searchTerm) {
 
 // ADD: other functions that will be useful for getting episode/show data
 
-export { getShowsByTerm };
+export { getShowsByTerm, TVMAZE_BASE_URL };
