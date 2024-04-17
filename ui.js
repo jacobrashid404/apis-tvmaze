@@ -22,7 +22,7 @@ function displayShows(shows) {
          <div class="media">
            <img
               src="${show.image}"
-              alt="#"
+              alt="image for show"
               class="w-25 me-3">
            <div class="media-body">
              <h5 class="text-primary">${show.name}</h5>
@@ -45,7 +45,7 @@ function displayShows(shows) {
 async function searchShowsAndDisplay() {
   const term = document.querySelector("#searchForm-term").value;
   const shows = await getShowsByTerm(term);
-  console.log('we arrived here and we got: ', shows);
+  // console.log('we arrived here and we got: ', shows);
 
   $episodesArea.style.display = "none";
   displayShows(shows);
