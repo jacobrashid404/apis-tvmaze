@@ -2,7 +2,7 @@ import { getShowsByTerm, TVMAZE_BASE_URL } from "./tvmaze.js";
 
 const $showsList = document.querySelector("#showsList");
 const $episodesArea = document.querySelector("#episodesArea");
-const $episodeList = document.querySelector("#episodesList");
+const $episodesList = document.querySelector("#episodesList");
 const $searchForm = document.querySelector("#searchForm");
 
 /** Given list of shows, create markup for each and append to DOM.
@@ -50,8 +50,7 @@ async function searchShowsAndDisplay() {
 
   $episodesArea.style.display = "none";
   displayShows(shows);
-  const episodes = await getEpisodesOfShow(82);
-  displayEpisodes(episodes);
+  addButtonEventListeners();
 }
 
 
@@ -73,21 +72,57 @@ async function getEpisodesOfShow(id) {
   });
 }
 
-/** Write a clear docstring for this function... */
+/** Given list of episodes, create markup for each and append to DOM.
+ *
+ * A episode is {id, name, season, number}
+ * */
 
 function displayEpisodes(episodes) {
+  $episodesList.innerHTML = '';
+
   for (const episode of episodes) {
     const $episode = document.createElement('li');
     $episode.innerHTML = `
-      ${episode.name} (season ${episode.season}, 
+      ${episode.name} (season ${episode.season},
       number ${episode.number})`;
-    $episodeList.appendChild($episode);
+    $episodesList.appendChild($episode);
     console.log($episode);
   }
+  $episodesArea.style.display = "block";
 }
 
 // add other functions that will be useful / match our structure & design
 // and udpate start as necessary
+
+
+/** Handle episode button press submission: get episodes from API and display.
+ */
+async function getEpisodesAndDisplay(showID) {
+  console.log('arrived at getEpisodesDisplay');
+
+  const episodes = await getEpisodesOfShow(showID);
+  displayEpisodes(episodes);
+
+}
+
+/**
+ * Attaches event listener to episodes button and shows list of episodes of
+ * selected show
+ */
+function addButtonEventListeners() {
+  $showsList.addEventListener('click', async function handleClick(evt) {
+    if (!evt.target.matches('.Show-getEpisodes')) {
+      return;
+    } else {
+      //TODO: correct syntax for this - hacky solution
+      const showId = evt.target.closest(".media").parentNode.dataset.showId;
+      console.log('showID: ', showId);
+      await getEpisodesAndDisplay(showId);
+    }
+  });
+}
+
+
 
 
 /** Attach event listeners to show search form and show list  */
@@ -97,6 +132,7 @@ function start() {
     evt.preventDefault();
     await searchShowsAndDisplay();
   });
+
 }
 
 
