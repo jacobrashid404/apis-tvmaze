@@ -10,6 +10,7 @@ const $searchForm = document.querySelector("#searchForm");
  * */
 
 function displayShows(shows) {
+  console.log("displayShows", shows);
   $showsList.innerHTML = '';
 
 
@@ -21,7 +22,7 @@ function displayShows(shows) {
     $show.innerHTML = `
          <div class="media">
            <img
-              src="http://static.tvmaze.com/uploads/images/medium_portrait/160/401704.jpg"
+              src="${show.image}"
               alt="Bletchly Circle San Francisco"
               class="w-25 me-3">
            <div class="media-body">
@@ -67,7 +68,7 @@ async function searchShowsAndDisplay() {
 
 /** Attach event listeners to show search form and show list  */
 
-function start () {
+function start() {
   $searchForm.addEventListener("submit", async function handleSearchForm(evt) {
     evt.preventDefault();
     await searchShowsAndDisplay();
