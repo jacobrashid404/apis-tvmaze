@@ -1,7 +1,8 @@
-import { getShowsByTerm } from "./tvmaze.js";
+import { getShowsByTerm, TVMAZE_BASE_URL } from "./tvmaze.js";
 
 const $showsList = document.querySelector("#showsList");
 const $episodesArea = document.querySelector("#episodesArea");
+const $episodeList = document.querySelector("#episodesList");
 const $searchForm = document.querySelector("#searchForm");
 
 /** Given list of shows, create markup for each and append to DOM.
@@ -49,6 +50,8 @@ async function searchShowsAndDisplay() {
 
   $episodesArea.style.display = "none";
   displayShows(shows);
+  const episodes = await getEpisodesOfShow(82);
+  displayEpisodes(episodes);
 }
 
 
@@ -56,11 +59,32 @@ async function searchShowsAndDisplay() {
  *      { id, name, season, number }
  */
 
-// async function getEpisodesOfShow(id) { }
+async function getEpisodesOfShow(id) {
+  const response = await fetch(`${TVMAZE_BASE_URL}/shows/${id}/episodes`);
+  const episodes = await response.json();
+
+  return episodes.map(episode => {
+    return {
+      id: episode.id,
+      name: episode.name,
+      season: episode.season,
+      number: episode.number
+    };
+  });
+}
 
 /** Write a clear docstring for this function... */
 
-// function displayEpisodes(episodes) { }
+function displayEpisodes(episodes) {
+  for (const episode of episodes) {
+    const $episode = document.createElement('li');
+    $episode.innerHTML = `
+      ${episode.name} (season ${episode.season}, 
+      number ${episode.number})`;
+    $episodeList.appendChild($episode);
+    console.log($episode);
+  }
+}
 
 // add other functions that will be useful / match our structure & design
 // and udpate start as necessary
