@@ -10,11 +10,10 @@ const $searchForm = document.querySelector("#searchForm");
  * */
 
 function displayShows(shows) {
-  console.log("displayShows", shows);
   $showsList.innerHTML = '';
 
-
   for (const show of shows) {
+
     const $show = document.createElement("div");
     $show.dataset.showId = show.id;
     $show.className = "Show col-md-12 col-lg-6 mb-4";
@@ -23,7 +22,7 @@ function displayShows(shows) {
          <div class="media">
            <img
               src="${show.image}"
-              alt="Bletchly Circle San Francisco"
+              alt="#"
               class="w-25 me-3">
            <div class="media-body">
              <h5 class="text-primary">${show.name}</h5>
@@ -46,6 +45,7 @@ function displayShows(shows) {
 async function searchShowsAndDisplay() {
   const term = document.querySelector("#searchForm-term").value;
   const shows = await getShowsByTerm(term);
+  console.log('we arrived here and we got: ', shows);
 
   $episodesArea.style.display = "none";
   displayShows(shows);
