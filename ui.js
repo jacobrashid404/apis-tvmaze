@@ -22,7 +22,7 @@ function displayShows(shows) {
          <div class="media">
            <img
               src="${show.image}"
-              alt="image for show"
+              alt="image for ${show.name}"
               class="w-25 me-3">
            <div class="media-body">
              <h5 class="text-primary">${show.name}</h5>

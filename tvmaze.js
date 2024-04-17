@@ -1,4 +1,5 @@
 const TVMAZE_BASE_URL = "http://api.tvmaze.com";
+const DEFAULT_IMG_URL = "https://tinyurl.com/tv-missing";
 
 /** Given a search term, search for tv shows that match that query.
  *
@@ -7,19 +8,20 @@ const TVMAZE_BASE_URL = "http://api.tvmaze.com";
  *    (if no image URL given by API, put in a default image URL)
  */
 
+
 async function getShowsByTerm(searchTerm) {
-  // ADD: Remove placeholder & make request to TVMaze search shows API.
-  const searchParam = new URLSearchParams({ q: searchTerm });
-  const response = await fetch(`${TVMAZE_BASE_URL}/search/shows?${searchParam}`);
+  const searchParams = new URLSearchParams({ q: searchTerm });
+  const response = await fetch(`${TVMAZE_BASE_URL}/search/shows?${searchParams}`);
   const shows = await response.json();
 
-  return shows.map(show => {
+  return shows.map(showAndScore => {
     return {
-      id: show.show.id,
-      name: show.show.name,
-      summary: show.show.summary,
-      image: (show.show.image === null) ?
-        "https://tinyurl.com/tv-missing" : show.show.image.medium
+      id: showAndScore.show.id,
+      name: showAndScore.show.name,
+      summary: showAndScore.show.summary,
+      image: (showAndScore.show.image === null)
+        ? DEFAULT_IMG_URL
+        : showAndScore.show.image.medium
     };
   });
 
