@@ -25,7 +25,23 @@ async function getShowsByTerm(searchTerm) {
     };
   });
 
+  /** Given a show ID, get from API and return (promise) array of episodes:
+   *      { id, name, season, number }
+   */
 
+  async function getEpisodesOfShow(id) {
+    const response = await fetch(`${TVMAZE_BASE_URL}/shows/${id}/episodes`);
+    const episodeData = await response.json();
+
+    return episodeData.map(episode => {
+      return {
+        id: episode.id,
+        name: episode.name,
+        season: episode.season,
+        number: episode.number
+      };
+    });
+  }
   // {
   //   id: 1767,
   //   name: "The Bletchley Circle",
@@ -48,4 +64,4 @@ async function getShowsByTerm(searchTerm) {
 
 // ADD: other functions that will be useful for getting episode/show data
 
-export { getShowsByTerm, TVMAZE_BASE_URL };
+export { getShowsByTerm, getEpisodesOfShow };

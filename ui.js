@@ -1,4 +1,4 @@
-import { getShowsByTerm, TVMAZE_BASE_URL } from "./tvmaze.js";
+import { getShowsByTerm, getEpisodesOfShow } from "./tvmaze.js";
 
 const $showsList = document.querySelector("#showsList");
 const $episodesArea = document.querySelector("#episodesArea");
@@ -53,25 +53,6 @@ async function searchShowsAndDisplay() {
   addButtonEventListeners();
 }
 
-
-/** Given a show ID, get from API and return (promise) array of episodes:
- *      { id, name, season, number }
- */
-
-async function getEpisodesOfShow(id) {
-  const response = await fetch(`${TVMAZE_BASE_URL}/shows/${id}/episodes`);
-  const episodes = await response.json();
-
-  return episodes.map(episode => {
-    return {
-      id: episode.id,
-      name: episode.name,
-      season: episode.season,
-      number: episode.number
-    };
-  });
-}
-
 /** Given list of episodes, create markup for each and append to DOM.
  *
  * A episode is {id, name, season, number}
@@ -80,11 +61,11 @@ async function getEpisodesOfShow(id) {
 function displayEpisodes(episodes) {
   $episodesList.innerHTML = '';
 
-  for (const episode of episodes) {
+  for (const { name, season, number } of episodes) {
     const $episode = document.createElement('li');
-    $episode.innerHTML = `
-      ${episode.name} (season ${episode.season},
-      number ${episode.number})`;
+
+    $episode.innerText = `
+      ${name} (season ${season}, number ${number})`;
     $episodesList.appendChild($episode);
     console.log($episode);
   }
@@ -114,10 +95,9 @@ function addButtonEventListeners() {
     if (!evt.target.matches('.Show-getEpisodes')) {
       return;
     } else {
-      //TODO: correct syntax for this - hacky solution
-      const showId = evt.target.closest(".media").parentNode.dataset.showId;
-      console.log('showID: ', showId);
-      await getEpisodesAndDisplay(showId);
+      const showIdAsStr = evt.target.closest("[data-show-id]").dataset.showId;
+      console.log('showID: ', showIdAsStr);
+      await getEpisodesAndDisplay(showIdAsStr);
     }
   });
 }
